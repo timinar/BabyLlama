@@ -1,6 +1,10 @@
 /models
 /data
 /logs
+/wandb
+
+# sbatch script
+training-run-single-gpu.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
