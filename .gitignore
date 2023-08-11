@@ -5,6 +5,7 @@
 
 # sbatch script
 training-run-single-gpu.sh
+eval-run-single-gpu.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

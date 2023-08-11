@@ -80,7 +80,7 @@ if wandb_log:
 
 
 training_args = TrainingArguments(
-    output_dir=MODEL_NAME,
+    output_dir=MODEL_OUTPUT,
     overwrite_output_dir=True,
     save_strategy = "epoch",
     evaluation_strategy = "epoch",
