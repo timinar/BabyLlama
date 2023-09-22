@@ -2,9 +2,13 @@
 /data
 /logs
 /wandb
+/drafts
 
 # sbatch script
 training-run-single-gpu.sh
+training-run-single-gpu-llama.sh
+training-run-single-gpu-gptj.sh
+
 eval-run-single-gpu.sh
 
 # Byte-compiled / optimized / DLL files

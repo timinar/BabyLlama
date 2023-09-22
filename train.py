@@ -1,8 +1,12 @@
-from transformers import GPT2Config, GPT2LMHeadModel, LlamaConfig, LlamaForCausalLM
+from transformers import (
+    GPT2Config, GPT2LMHeadModel, 
+    LlamaConfig, LlamaForCausalLM, 
+    GPTJConfig, GPTJForCausalLM
+)
 from transformers import Trainer, TrainingArguments, DataCollatorForLanguageModeling
 from transformers import GPT2TokenizerFast
 from torch.utils.data import Subset
-from random import sample
+from random import sample, seed
 from pathlib import Path
 import yaml
 import argparse
@@ -41,6 +45,7 @@ tokenizer.pad_token = "<pad>"
 train_dataset = BabylmDataset(config['data']['train_path'], SEQ_LENGTH, tokenizer=tokenizer, random_chunk=True)
 full_eval_dataset = BabylmDataset(config['data']['eval_path'], SEQ_LENGTH, tokenizer=tokenizer, offset=0)
 
+seed(2023) # we fix the same subset for all models
 eval_indices = sample(range(len(full_eval_dataset)), config['data']['eval_samples'])
 eval_dataset = Subset(full_eval_dataset, eval_indices)
 
@@ -55,24 +60,42 @@ data_collator = DataCollatorForLanguageModeling(
 if config['model']['type'] == "Llama":
     model_config = LlamaConfig(
         vocab_size=tokenizer.vocab_size,
+        max_position_embeddings=2*tokenizer.model_max_length,
         hidden_size=config['model']['hidden_size'],
         intermediate_size=config['model']['intermediate_size'],
         num_hidden_layers=config['model']['n_layer'],
         num_attention_heads=config['model']['n_head'],
-        # Add other parameters as needed
+        tie_word_embeddings=config['model']['tie_word_embeddings'],
+        pad_token_id=tokenizer.convert_tokens_to_ids("<pad>"),
     )
     model = LlamaForCausalLM(model_config)
 elif config['model']['type'] == "GPT2":
     model_config = GPT2Config(
-        #TODO check the intermediate_size, I guess it is 4 * hidden
         vocab_size=tokenizer.vocab_size,
-        n_positions=tokenizer.model_max_length,
+        n_positions=2*tokenizer.model_max_length,
         n_embd=config['model']['hidden_size'],
         n_layer=config['model']['n_layer'],
         n_head=config['model']['n_head'],
-        # Add other parameters as needed
+        resid_pdrop = config['model']['resid_pdrop'],
+        embd_pdrop = config['model']['embd_pdrop'],
+        attn_pdrop = config['model']['attn_pdrop'],
+        pad_token_id=tokenizer.convert_tokens_to_ids("<pad>"),
     )
     model = GPT2LMHeadModel(model_config)
+elif config['model']['type'] == "GPTJ":
+    model_config = GPTJConfig(
+        vocab_size=tokenizer.vocab_size,
+        n_positions=2*tokenizer.model_max_length,
+        n_embd=config['model']['hidden_size'],
+        n_layer=config['model']['n_layer'],
+        n_head=config['model']['n_head'],
+        resid_pdrop = config['model']['resid_pdrop'],
+        embd_pdrop = config['model']['embd_pdrop'],
+        attn_pdrop = config['model']['attn_pdrop'],
+        tie_word_embeddings=config['model']['tie_word_embeddings'],
+        pad_token_id=tokenizer.convert_tokens_to_ids("<pad>"),
+    )
+    model = GPTJForCausalLM(model_config)
 
 print(f'model parameters = {model.num_parameters()}')
 
