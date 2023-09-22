@@ -1,0 +1,28 @@
+data:
+  tokenizer_path: "./models/gpt-clean-16000.json"
+  train_path: "./data/babylm_10M_clean"
+  eval_path: "./data/babylm_dev_clean"
+  seq_length: 128
+  eval_samples: 8192
+
+model:
+  type: "Llama" # or "GPT2"
+  name: "Llama-360M"
+  hidden_size: 1024
+  intermediate_size: 3072
+  n_layer: 24
+  n_head: 8 # Change this if you're using GPT2
+
+training:
+  lr: 3e-4
+  batch_size: 128
+  num_epochs: 4
+  gradient_accumulation_steps: 8
+  warmup_steps: 300
+  fp16: True
+
+logging: 
+  wandb: True
+  project: "babylm-dev"
+  output_dir: "./models/"
+
