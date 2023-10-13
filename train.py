@@ -65,7 +65,7 @@ if config['model']['type'] == "Llama":
         intermediate_size=config['model']['intermediate_size'],
         num_hidden_layers=config['model']['n_layer'],
         num_attention_heads=config['model']['n_head'],
-        tie_word_embeddings=config['model']['tie_word_embeddings'],
+        tie_word_embeddings=config['model'].get('tie_word_embeddings', False),
         pad_token_id=tokenizer.convert_tokens_to_ids("<pad>"),
     )
     model = LlamaForCausalLM(model_config)
@@ -120,7 +120,7 @@ training_args = TrainingArguments(
     fp16=config['training']['fp16'],
     load_best_model_at_end=True,
     metric_for_best_model="eval_loss",
-    torch_compile = True #TODO add to config
+    torch_compile = config['training'].get('torch_compile', False),
 )
 
 trainer = Trainer(
