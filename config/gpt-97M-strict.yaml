@@ -1,0 +1,31 @@
+data:
+  tokenizer_path: "./models/gpt-clean-16000.json"
+  train_path: "./data/babylm_100M_clean"
+  eval_path: "./data/babylm_dev_clean"
+  seq_length: 128
+  eval_samples: 16384
+
+model:
+  type: "GPT2" # or "Llama"
+  name: "GPT2-97M-strict"
+  hidden_size: 768
+  intermediate_size: None # train.py uses default = 4 * hidden_size 
+  n_layer: 12
+  n_head: 12 
+  resid_pdrop: 0.0 # HF Llama doesn't have dropout
+  attn_pdrop: 0.0
+  embd_pdrop: 0.0
+
+training:
+  lr: 7e-4
+  batch_size: 128
+  num_epochs: 6 # epochs is not enough to reach Llama eval loss
+  gradient_accumulation_steps: 2
+  warmup_steps: 300
+  fp16: True
+
+logging: 
+  wandb: True
+  project: "babylm-dev"
+  output_dir: "./models/"
+

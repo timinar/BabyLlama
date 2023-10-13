@@ -109,17 +109,18 @@ training_args = TrainingArguments(
     overwrite_output_dir=True,
     save_strategy = "epoch",
     evaluation_strategy = "epoch",
-    num_train_epochs=4,
+    num_train_epochs=config['training']['num_epochs'],
     gradient_accumulation_steps=accumulation_steps,
     per_device_train_batch_size=per_device_bsz,
     save_total_limit=1,  # Set to zero to avoid saving
     warmup_steps=config['training']['warmup_steps'], 
     lr_scheduler_type="cosine",
     learning_rate=float(config['training']['lr']),
-    logging_steps=10,
+    logging_steps=20,
     fp16=config['training']['fp16'],
     load_best_model_at_end=True,
     metric_for_best_model="eval_loss",
+    torch_compile = True #TODO add to config
 )
 
 trainer = Trainer(
