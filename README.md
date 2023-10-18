@@ -1,7 +1,12 @@
 # BabyLlama
 
-![Baby-Llama LLM with its Teachers](assets/babyllama-dalle3.png)
-*BabyLlama and its teachers, as depicted by  DALL·E 3.*
+[![arXiv](https://img.shields.io/badge/arXiv-2308.02019-b31b1b.svg)](https://arxiv.org/abs/2308.02019)
+
+<div align="center">
+  <img src="assets/babyllama-dalle3.png" alt="Baby-Llama LLM with its Teachers" width=50% height=50%>
+
+  *BabyLlama and its teachers, as depicted by  DALL·E 3*
+</div>
 
 Very basic training code for BabyLlama, our submission to the strict-small track of the BabyLM challenge. See our [paper](https://arxiv.org/abs/2308.02019) for more details.
 
